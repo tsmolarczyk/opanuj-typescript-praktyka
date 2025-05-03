@@ -55,4 +55,22 @@ class RedditIdentityProcessor {
   }
 }
 
-export class IdentityProcessor {}
+type Provider = 'apple' | 'google' | 'reddit'
+
+type ProviderIdentityMap = {
+  google: GoogleIdentity;
+  apple: AppleIdentity;
+  reddit: RedditIdentity;
+}
+
+export class IdentityProcessor<P extends Provider> {
+  constructor(private provider: P) {}
+
+  findById(id: string): ProviderIdentityMap[P] | undefined {
+    return users.find((user)=> user.id === id && user.provider === this.provider) as ProviderIdentityMap[P]
+  }
+
+  findByUserName(userName: string): ProviderIdentityMap[P] | undefined {
+    return users.find((user) => user.userName === userName && user.provider === this.provider) as ProviderIdentityMap[P]
+  }
+}
